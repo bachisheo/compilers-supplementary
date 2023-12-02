@@ -6,13 +6,6 @@ jobs:
     runs-on: ubuntu-latest
     # Map a step output to a job output
     steps:
-      - name: Extract branch name
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
-      - uses: actions/checkout@v2
-        with:
-          ref: refs/pull/${{ github.event.pull_request.number }}/head
       - name: Check Deadline
         run: |
           deadline=2023-12-02T23:59
@@ -23,6 +16,13 @@ jobs:
               echo $(date +'%Y-%m-%dT%H:%M')
               exit 1
           fi
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+      - uses: actions/checkout@v2
+        with:
+          ref: refs/pull/${{ github.event.pull_request.number }}/head
       - id: step1
         run: |
           login=${{ github.event.pull_request.user.login }}
